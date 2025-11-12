@@ -1,0 +1,270 @@
+@import "tailwindcss";
+
+@font-face {
+    font-family: 'Overpass Mono';
+    src: url('/fonts/OverpassMono-Regular.ttf');
+}
+
+html,body {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    font-family: "Overpass Mono";
+}
+
+body {
+    background: #12282C;
+}
+
+h1 {
+    font-size: 50px;
+}
+
+h2 {
+    font-size: 35px;
+}
+
+.pol-button {
+    font-size: 16px;
+    background-color: #1E4147;
+    text-decoration: none;
+    color: #AAC789;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    padding-left: 30px;
+    padding-right: 30px;
+    border: 1px solid #AAC789;
+    transition: 0.2s;
+}
+
+.pol-button:hover {
+    cursor: pointer;
+    background-color: #306770;
+}
+
+.pol-button-slim {
+    padding: 5px 15px;
+}
+
+.pol-button-form {
+    height: 100%;
+    padding: 10px 15px;
+}
+
+.pol-iconbtn {
+    cursor: pointer;
+    font-size: 20px;
+    color: #809668;
+    transition: 0.2s;
+}
+
+.pol-iconbtn:hover {
+    color: #AAC789;
+}
+
+.pol-button-circle {
+    text-align: center;
+    padding: 0;
+    padding-top: 7.3px;
+    font-size: 23px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+
+.pol-btn-x {
+    padding: 5px;
+    background: none;
+    opacity: 0.5;
+    border: none;
+}
+
+.pol-btn-x:hover {
+    opacity: 1;
+    background: none;
+}
+
+.pol-modal-wrapper {
+    z-index: 99;
+    position: fixed;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+}
+
+.pol-modal-overlay {
+    min-height: 400px;
+    z-index: 100;
+    background: rgba(0,0,0,0.75);
+    height: 100%;
+    width: 100%;
+    display: block;
+    position: absolute;
+}
+
+.pol-modal {
+    color: #1E4147;
+    background: #AAC789;
+    display: block;
+    border-radius: 5px;
+    z-index: 101;
+    padding: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.pol-modal-header {
+    width: 100%;
+    display: flex;
+}
+
+.pol-modal-content {
+    padding-bottom: 20px;
+}
+
+.pol-text-dark {
+    color: #1E4147;
+}
+
+
+.pol-img-preview-box {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    background: #183236;;
+    width: 100%;
+    height: 180px;
+    z-index: 1;
+    color: white;
+}
+.pol-img-preview-box img {
+    transition: 0.3s;
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+.pol-img-preview-box .selection-overlay {
+    position: absolute;
+    transition: 0.3s;
+    background: #000;
+    opacity: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+}
+
+.pol-img-preview-box .selection-text {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+    transition: 0.3s;
+    z-index: 3;
+}
+
+.pol-img-preview-box:hover .selection-overlay {
+    opacity: 0.6 !important;
+}
+
+.pol-img-preview-box:hover .selection-text {
+    opacity: 1 !important;
+}
+
+.pol-sidebar {
+    background: #1E4147;
+    color: #AAC789;
+}
+
+.pol-home {
+    background: #000;
+}
+
+.pol-modal-content {
+    padding: 0px 30px;
+    padding-bottom: 20px;
+}
+
+.pol-modal-large {
+    min-width: 640px;
+}
+
+
+/* Make Modal have padding and ignore min width */
+@media screen and (max-width: 40rem) {
+    .pol-modal {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    .pol-modal-large {
+        min-width: 0px;
+    }
+
+    .pol-button-slim {
+        font-size: 12px;
+    }
+}
+
+/* POLL CARD */
+.pol-poll-header {
+    background-color: #2b6068;
+    background-size: cover;
+    background-position: center;
+    height: 200px;
+    width: 100%;
+    z-index: 1;
+    display: flex;
+}
+
+.pol-poll-header span {
+    display: block;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pol-result {
+    font-size: 16px;
+    background-color: #0e1e20;
+    text-decoration: none;
+    color: #AAC789;
+    border: 1px solid hsl(88, 36%, 66%);
+    transition: 0.2s;
+    display: grid;
+    z-index: 1;
+}
+
+.pol-result-bar {
+    grid-column: 1;
+  grid-row: 1;
+    width: 100%;
+    background: rgb(119, 139, 96);
+    z-index: 2;
+}
+
+.pol-result-content {
+    grid-column: 1;
+  grid-row: 1;
+    z-index: 3;
+}
+
+.pol-result-text {
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    color: #fff;
+}

@@ -1,0 +1,45 @@
+.splash {
+    display: flex;
+    background-color: #1E4147;
+    color: #AAC789;
+}
+
+.splash-left-corner {
+    position: fixed;
+    left: 0;
+    z-index: 3;
+    margin-left: 15px;
+    margin-top: 12px;
+}
+
+.splash-content {
+    z-index: 3;
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30vh;
+    text-align: center;
+    padding-bottom: 30vh;
+}
+
+.splash-img {
+    position: fixed !important;
+    display: block;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.splash::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #1E4147;
+    opacity: .7;
+    z-index: 2;
+}
