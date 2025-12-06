@@ -13,10 +13,4 @@ public class UserController {
         this.userService = userService;
     }
 
-    // TEST to make sure Backend is connecting to SQL database 
-    // GET http://localhost:8081/api/users/count  should say 0(table is currently empty)
-    @GetMapping("/api/users/count")
-    public int getUserCount() {
-        return userService.countUsers();
-    }
 } // UserController
