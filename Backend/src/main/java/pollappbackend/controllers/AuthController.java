@@ -55,7 +55,7 @@ public class AuthController {
     } // LoginRequest
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest req) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest req) {
         if (req.username == null || req.username.isBlank()
                 || req.password == null || req.password.isBlank()) {
             return ResponseEntity
@@ -71,7 +71,25 @@ public class AuthController {
                     .body("Invalid username or password.");
         }
 
-        return ResponseEntity.ok("Login successful.");
+        var user = userService.getUserByUsername(req.username);
+        if (user == null) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("User record not found after login.");
+        } // if
+
+        LoginResponse resp = new LoginResponse();
+        resp.userId = user.getUserId();
+        resp.username = user.getUsername();
+        resp.displayName = user.getDisplayName();
+
+        return ResponseEntity.ok(resp);
     } // login
+
+    public static class LoginResponse {
+        public Integer userId;
+        public String username;
+        public String displayName;
+    } // LoginResponse
     
 } // AuthController

@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import pollappbackend.models.User;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -76,5 +77,31 @@ public class UserService {
         } // try catch
 
     } // validateLogin
+
+    public User getUserByUsername(String username) {
+        String sql = "SELECT user_id, username, password, display_name FROM `User` WHERE username = ?";
+
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    User u = new User();
+                    u.setUserId(rs.getInt("user_id"));
+                    u.setUsername(rs.getString("username"));
+                    u.setPassword(rs.getString("password"));
+                    u.setDisplayName(rs.getString("display_name"));
+                    return u;
+                } // if
+            } // try
+
+            return null;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } // try catch
+    } // getUserByUsername
 
 } // UserService

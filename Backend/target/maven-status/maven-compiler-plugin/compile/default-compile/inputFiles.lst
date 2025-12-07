@@ -3,6 +3,7 @@
 /Users/kaylaarthur/Downloads/CSCI 4370/DBTermProject/Backend/src/main/java/pollappbackend/models/Vote.java
 /Users/kaylaarthur/Downloads/CSCI 4370/DBTermProject/Backend/src/main/java/pollappbackend/controllers/VoteController.java
 /Users/kaylaarthur/Downloads/CSCI 4370/DBTermProject/Backend/src/main/java/pollappbackend/controllers/PollController.java
+/Users/kaylaarthur/Downloads/CSCI 4370/DBTermProject/Backend/src/main/java/pollappbackend/config/CorsConfig.java
 /Users/kaylaarthur/Downloads/CSCI 4370/DBTermProject/Backend/src/main/java/pollappbackend/BackendApplication.java
 /Users/kaylaarthur/Downloads/CSCI 4370/DBTermProject/Backend/src/main/java/pollappbackend/services/VoteService.java
 /Users/kaylaarthur/Downloads/CSCI 4370/DBTermProject/Backend/src/main/java/pollappbackend/models/PollOption.java
