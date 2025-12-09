@@ -21,9 +21,21 @@ const SignupForm: React.FC<SignupFormProps> = ({onNewUser}) => {
             body: JSON.stringify({
                 username,
                 password,
-                display_name: displayName
+                displayName: displayName
             })
         }).then(async (response: Response) => {
+            const text = await response.text();  
+            if (response.ok) {
+            setAlert(text);                    
+            // maybe redirect to login here ?????????????
+            } else {
+            setAlert(text);                    
+            }
+        }).catch((error: Error) => {
+            setAlert(error.message);
+        });
+        /*
+        .then(async (response: Response) => {
             const jsonData = await response.json();
             if (response.status == 201) {
                 onNewUser();
@@ -33,6 +45,7 @@ const SignupForm: React.FC<SignupFormProps> = ({onNewUser}) => {
         }).catch(async (error: Error) => {
             setAlert(error.message);
         })
+        */
     }
 
     return (
