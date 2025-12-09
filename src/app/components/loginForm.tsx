@@ -28,20 +28,26 @@ const LoginForm: React.FC<LoginFormProps> = ({onLogin, initialError}) => {
                 password
             })
         }).then(async (response: Response) => {
-            const jsonData = await response.json();
-            if (response.status == 200) {
+            if (response.ok) {
+                const jsonData = await response.json();
                 console.log(jsonData);
+
+                // Java/spring boot returns { userId, username, displayName }
                 userContext.setUser({
-                    username: jsonData.user["username"],
-                    displayName: jsonData.user["display_name"]
+                    username: jsonData.username,
+                    displayName: jsonData.displayName,
+                    userId: jsonData.userId
                 });
+
                 userContext.setIsLoggedIn(true);
+                setAlert(null);
                 onLogin();
                 router.push("/home");
             } else {
-                setAlert(jsonData.message);
+                const text = await response.text();
+                setAlert(text);
             }
-        }).catch(async (error: Error) => {
+        }).catch((error: Error) => {
             setAlert(error.message);
         })
     }

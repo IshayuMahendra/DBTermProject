@@ -25,10 +25,10 @@ const PollList: React.FC<PollListProps> = ({ collectionType }) => {
   const router = useRouter();
 
   const updatePolls = () => {
-    let fetchURL = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/poll`
+    let fetchURL = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls`
 
     if (collectionType == "profile") {
-      fetchURL = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/profile`
+      fetchURL = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls`
     }
 
     fetch(fetchURL, {
@@ -63,8 +63,8 @@ const PollList: React.FC<PollListProps> = ({ collectionType }) => {
       <div className="w-full h-full bg-[#12282C] text-[#ffffff] flex flex-col items-center">
         <div className="w-full md:w-2/3 lg:w-full xl:w-2/3 space-y-6 p-6">
           {polls.map((poll) => (
-            <PollCard poll={poll} key={poll.id} onDelete={() => {
-              setPolls((prev) => prev.filter((entry) => entry.id != poll.id));
+            <PollCard poll={poll} key={poll.pollId} onDelete={() => {
+              setPolls((prev) => prev.filter((entry) => entry.pollId != poll.pollId));
             }} onUpdated={() => setPolls((prev) => [...prev])}></PollCard>
           ))}
         </div>
