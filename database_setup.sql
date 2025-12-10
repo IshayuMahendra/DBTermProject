@@ -1,9 +1,8 @@
 -- if rerunning file, drops tables
-DROP TABLE IF EXISTS User;
-DROP TABLE IF EXISTS Vote;
-DROP TABLE IF EXISTS Poll;
-DROP TABLE IF EXISTS PollOption;
-DROP TABLE IF EXISTS Image;
+DELETE FROM Vote;
+DELETE FROM PollOption;
+DELETE FROM Poll;
+DELETE FROM User;
 
 -- -------------------------------------
 -- User table

@@ -18,10 +18,10 @@ GROUP BY o.option_id, o.poll_id, o.text
 ORDER BY o.option_id;
 
 Before adding idx_vote_option_id:
-  - Execution time: __________ ms
+  - Execution time:0.68..0.68 seconds
 
 - After adding idx_vote_option_id:
-  - Execution time: __________ ms
+  - Execution time: 0.399..0.4 seconds
 
 
 
@@ -34,21 +34,20 @@ WHERE v.vote_id IS NULL
 ORDER BY p.created_at DESC;
 
 - Before adding idx_vote_poll_user:
-  - Execution time: __________ ms
+  - Execution time: 7.01..7.19 seconds
 
 - After adding idx_vote_poll_user:
-  - Execution time: __________ ms
+  - Execution time: 6.4..6.61 seconds
 
 
 
 SELECT COUNT(*) FROM Vote WHERE poll_id = ? AND user_id = ?;
 
 - Before adding idx_vote_poll_user:
-  - Execution time: __________ ms
+  - Execution time: 0.01..0.0101 seconds
 
 - After adding idx_vote_poll_user:
-  - Execution time: __________ ms
+  - Execution time: 0.1..0.1 seconds
 
 
 
-  
