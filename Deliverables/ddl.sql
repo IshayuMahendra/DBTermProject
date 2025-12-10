@@ -94,3 +94,15 @@ CREATE TABLE Vote (
     CONSTRAINT uq_user_one_vote
         UNIQUE (poll_id, user_id)
 );
+
+-- -------------------------------------
+-- Index: looking up all votes for poll options
+-- -------------------------------------
+CREATE INDEX idx_vote_option_id
+    ON Vote(option_id);
+
+-------------------------------------
+-- Index: for queries that look at votes per poll for each user
+-- -------------------------------------
+CREATE INDEX idx_vote_poll_user
+    ON Vote(poll_id, user_id);
