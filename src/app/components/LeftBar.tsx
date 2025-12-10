@@ -7,7 +7,7 @@ const LeftSidebar: React.FC = () => {
     /*Temporary slots just to fill the left side - Ishayu */
     const navItems = [
         { label: 'Home Page', path: '/home' },
-        { label: 'Saved Polls', path: '/saved', requiresLogin: true },
+        { label: 'Unvoted Polls', path: '/saved', requiresLogin: true },
         { label: 'Profile', path: '/profile', requiresLogin: true },
         { label: 'Settings', path: '/settings', requiresLogin: true },
     ];

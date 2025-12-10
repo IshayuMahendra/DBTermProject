@@ -29,6 +29,7 @@ interface PollDetailResponse {
     title: string;
   };
   options: PollOptionDto[];
+  hasVoted?: boolean; //
 }
 
 interface PollCardProps {
@@ -46,11 +47,40 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
   const router = useRouter();
 
   const [options, setOptions] = useState<PollOptionDto[]>([]);
-  const [hasVoted, setHasVoted] = useState<boolean>(poll.hasVoted);
+  const [hasVoted, setHasVoted] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   // Load poll options from backend
   useEffect(() => {
+    const loadDetails = async () => {
+      try {
+        let url = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls/${poll.pollId}`;
+
+        // if logged in, ask backend whether THIS user has voted
+        if (isLoggedIn && user && user.userId != null) {
+          url += `?userId=${user.userId}`;
+        }
+
+        const res = await fetch(url);
+        if (!res.ok) {
+          console.error("Failed to load poll details", await res.text());
+          return;
+        }
+
+        const data: PollDetailResponse = await res.json();
+        setOptions(data.options);
+
+        if (typeof data.hasVoted === "boolean") {
+          setHasVoted(data.hasVoted);
+        } else {
+          // fallback: no info, assume not voted
+          setHasVoted(false);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    /*
     const loadDetails = async () => {
       try {
         const res = await fetch(
@@ -66,6 +96,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
         console.error(err);
       }
     };
+    */
     loadDetails();
   }, [poll.pollId]);
 
@@ -116,6 +147,24 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
 
   //Delete poll function 
   const handleDeletePoll = () => {
+  setAlertMsg(undefined);
+  fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls/${poll.pollId}`, {
+    method: "DELETE",
+  })
+    .then(async (res: Response) => {
+      if (res.ok) {
+        onDelete(); // remove from list
+      } else {
+        const text = await res.text();
+        setAlertMsg(text);
+      }
+    })
+    .catch((error: Error) => {
+      setAlertMsg(error.message);
+    });
+};
+  /*
+  const handleDeletePoll = () => {
     setAlertMsg(undefined);
     fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/poll/${poll.pollId}`, {
       method: 'DELETE'
@@ -131,6 +180,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
         setAlertMsg(error.message);
       })
   }
+      */
 
 
   const submitVote = async (optionIndex: number) => {
@@ -211,9 +261,20 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
   */
 
   const doRefresh = () => {
-    fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/poll/${poll.pollId}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls/${poll.pollId}`, {
       method: 'GET'
+    }).then(async (res: Response) => {
+      const jsonData = await res.json();
+      if (res.ok && jsonData.poll && jsonData.options) {
+        poll.title = jsonData.poll.title;
+        setOptions(jsonData.options); // refresh options + votes
+        setHasVoted(false);           // or set true based on backend if you add that later
+        onUpdated();
+      } else {
+        setAlertMsg(jsonData.message ?? "Failed to refresh poll.");
+      }
     })
+    /*
       .then(async (res: Response) => {
         const jsonData = await res.json();
         if (res.status == 200 && jsonData.poll) {
@@ -225,7 +286,8 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
         } else {
           setAlertMsg(jsonData.message);
         }
-      }).catch((error: Error) => {
+      }) */
+      .catch((error: Error) => {
         setAlertMsg(error.message);
       })
   }
@@ -253,8 +315,8 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
         <ul className="space-x-0 space-y-3 mt-3">
          {hasVoted ? (
         // after voting: show results from backend
-        <VotedOptions options={options} />
-        ) : (
+         <VotedOptions options={options} />
+         ) : (
         // before voting: show option texts, mapped from backend objects
         <UnvotedOptions
           options={options.map((opt) => opt.text)}

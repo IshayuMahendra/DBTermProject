@@ -168,14 +168,96 @@ public class PollService {
                 p.setCreatorId(rs.getInt("creator_id"));
                 p.setImageId(rs.getString("image_id"));
                 polls.add(p);
-            }
+            } // while
 
             return polls;
 
         } catch (Exception e) {
             e.printStackTrace();
             return polls;
-        }
+        } // try catch
     } // getAllPolls
+
+    public List<Poll> getUnvotedPollsForUser(int userId) {
+        String sql = "SELECT p.* FROM Poll p WHERE NOT EXISTS (SELECT 1 FROM Vote v WHERE v.poll_id = p.poll_id AND v.user_id = ?) ORDER BY p.created_at DESC";
+
+        List<Poll> polls = new ArrayList<>();
+
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, userId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Poll p = new Poll();
+                    p.setPollId(rs.getInt("poll_id"));
+                    p.setTitle(rs.getString("title"));
+                    p.setCreatedAt(rs.getTimestamp("created_at"));
+                    p.setUpdatedAt(rs.getTimestamp("updated_at"));
+                    p.setCreatorId(rs.getInt("creator_id"));
+                    String imageId = rs.getString("image_id");
+                    p.setImageId(imageId);
+                    polls.add(p);
+                } // while
+            } // try
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } // try catch
+
+        return polls;
+    } // getUnvotedPollsForUser
+
+    public List<Poll> getPollsByCreator(int creatorId) {
+        String sql = "SELECT p.* FROM Poll p WHERE p.creator_id = ? ORDER BY p.created_at DESC";
+
+        List<Poll> polls = new ArrayList<>();
+
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, creatorId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Poll p = new Poll();
+                    p.setPollId(rs.getInt("poll_id"));
+                    p.setTitle(rs.getString("title"));
+                    p.setCreatedAt(rs.getTimestamp("created_at"));
+                    p.setUpdatedAt(rs.getTimestamp("updated_at"));
+                    p.setCreatorId(rs.getInt("creator_id"));
+
+                    String imageId = rs.getString("image_id"); // can be null
+                    p.setImageId(imageId);
+
+                    polls.add(p);
+                } // while
+            } // try
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } // try catch
+
+        return polls;
+    } // getPollsByCreator
+
+    public boolean hasUserVoted(int pollId, int userId) {
+        String sql = "SELECT 1 FROM Vote WHERE poll_id = ? AND user_id = ? LIMIT 1";
+
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, pollId);
+            stmt.setInt(2, userId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next(); // true if at least one row
+            } // try
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } // try catch
+    } // hasUserVoted
 
 } // PollService

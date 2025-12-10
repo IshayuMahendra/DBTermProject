@@ -10,7 +10,7 @@ import Modal from './modal';
 import PollCard from "./pollCard";
 
 interface PollListProps {
-  collectionType: "profile" | "home"
+  collectionType: "profile" | "home" | "saved"
 }
 
 //Main feed page that displaus all the polls
@@ -21,15 +21,19 @@ const PollList: React.FC<PollListProps> = ({ collectionType }) => {
   const [polls, setPolls] = useState<Poll[]>([
 
   ]);
-  const user = useUser();
+  const { user, isLoggedIn } = useUser();
   const router = useRouter();
 
   const updatePolls = () => {
     let fetchURL = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls`
 
     if (collectionType == "profile") {
-      fetchURL = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls`
-    }
+      if (!user || user.userId == null) return;
+      fetchURL = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls/user/${user.userId}`
+    } else if (collectionType === "saved") {
+      if (!user || user.userId == null) return;
+      fetchURL = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls/unvoted/${user.userId}`;
+      }
 
     fetch(fetchURL, {
       method: "GET"
@@ -47,15 +51,15 @@ const PollList: React.FC<PollListProps> = ({ collectionType }) => {
   };
 
   const [intervalID, setIntervalID] = useState<ReturnType<typeof setInterval>|null>(null);
-  useEffect(updatePolls, [user.isLoggedIn]);
+  useEffect(updatePolls, [isLoggedIn]);
   useEffect(() => {
-    if(user.isLoggedIn) {
+    if(isLoggedIn) {
       setIntervalID(setInterval(updatePolls, 3000));
     } else if(intervalID != null) {
       clearInterval(intervalID);
       setIntervalID(null);
     }
-  }, [user.isLoggedIn]);
+  }, [isLoggedIn]);
 
   //Main central page
   return (
@@ -74,7 +78,7 @@ const PollList: React.FC<PollListProps> = ({ collectionType }) => {
               className="pol-button rounded-full text-center"
               style={{ position: "fixed", bottom: 0, marginBottom: 20, marginLeft: -100, width: 60, height: 60, fontSize: 20, padding: 0, border: 0 }}
               onClick={() => {
-                if (!user.isLoggedIn) {
+                if (!isLoggedIn) {
                   const errorParams = new URLSearchParams();
                   errorParams.set("login", "true");
                   errorParams.set("error", "You must be logged in to do that.")
