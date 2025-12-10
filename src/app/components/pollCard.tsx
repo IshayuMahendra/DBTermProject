@@ -39,7 +39,7 @@ interface PollCardProps {
 }
 
 
-//Main feed page that displaus all the polls
+
 const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCardProps) => {
   const [isBeingEdited, setIsBeingEdited] = useState(false);
   const [alertMsg, setAlertMsg] = useState<undefined | string>(undefined);
@@ -50,13 +50,13 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
   const [hasVoted, setHasVoted] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Load poll options from backend
+
   useEffect(() => {
     const loadDetails = async () => {
       try {
         let url = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls/${poll.pollId}`;
 
-        // if logged in, ask backend whether THIS user has voted
+       
         if (isLoggedIn && user && user.userId != null) {
           url += `?userId=${user.userId}`;
         }
@@ -73,30 +73,13 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
         if (typeof data.hasVoted === "boolean") {
           setHasVoted(data.hasVoted);
         } else {
-          // fallback: no info, assume not voted
+
           setHasVoted(false);
         }
       } catch (err) {
         console.error(err);
       }
     };
-    /*
-    const loadDetails = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls/${poll.pollId}`
-        );
-        if (!res.ok) {
-          console.error("Failed to load poll details", await res.text());
-          return;
-        }
-        const data: { poll: any; options: PollOptionDto[] }= await res.json();
-        setOptions(data.options);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    */
     loadDetails();
   }, [poll.pollId]);
 
@@ -128,7 +111,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
         return;
       }
 
-      // Optimistically update vote count and mark as voted
+    
       setOptions((prev) =>
         prev.map((opt, idx) =>
           idx === optionIndex ? { ...opt, votes: opt.votes + 1 } : opt
@@ -145,7 +128,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
   const totalVotes = options.reduce((sum, opt) => sum + opt.votes, 0);
 
 
-  //Delete poll function 
+ 
   const handleDeletePoll = () => {
   setAlertMsg(undefined);
   fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls/${poll.pollId}`, {
@@ -153,7 +136,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
   })
     .then(async (res: Response) => {
       if (res.ok) {
-        onDelete(); // remove from list
+        onDelete(); 
       } else {
         const text = await res.text();
         setAlertMsg(text);
@@ -163,28 +146,9 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
       setAlertMsg(error.message);
     });
 };
-  /*
-  const handleDeletePoll = () => {
-    setAlertMsg(undefined);
-    fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/poll/${poll.pollId}`, {
-      method: 'DELETE'
-    })
-      .then(async (res: Response) => {
-        const jsonData = await res.json();
-        if (res.status == 200) {
-          onDelete();
-        } else {
-          setAlertMsg(jsonData.message);
-        }
-      }).catch((error: Error) => {
-        setAlertMsg(error.message);
-      })
-  }
-      */
-
 
   const submitVote = async (optionIndex: number) => {
-  // make sure user is logged in
+
   if (!isLoggedIn || !user || user.userId == null) {
     setAlertMsg("You must be logged in to vote.");
     return;
@@ -212,7 +176,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
       return;
     }
 
-    // success: update local votes + mark as voted (like the original did)
+
     setOptions((prev) =>
       prev.map((opt, idx) =>
         idx === optionIndex ? { ...opt, votes: opt.votes + 1 } : opt
@@ -226,40 +190,6 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
     setAlertMsg(err.message ?? "Failed to vote.");
   }
 };
-
-  /*
-  const submitVote = (index: number) => {
-    setAlertMsg("");
-    if(process.env.NEXT_PUBLIC_CAN_VOTE_ANONYMOUSLY != "true" && !isLoggedIn) {
-      const errorParams = new URLSearchParams();
-      errorParams.set("login", "true");
-      errorParams.set("error", "You must be logged in to do that.")
-      router.push(`/home?${errorParams.toString()}`);
-      return;
-    }
-    fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/poll/${poll.pollId}/vote`, {
-      method: 'POST',
-      body: JSON.stringify({
-        optionIndex: index
-      })
-    })
-      .then(async (res: Response) => {
-        const jsonData = await res.json();
-        if (res.status == 200) {
-          const pollResults: PollOption[] = jsonData.results;
-          poll.results = pollResults;
-          poll.hasVoted = true;
-          poll.hasVotes = true;
-          onUpdated();
-        } else {
-          setAlertMsg(jsonData.message);
-        }
-      }).catch((error: Error) => {
-        setAlertMsg(error.message);
-      })
-  }
-  */
-
   const doRefresh = () => {
     fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls/${poll.pollId}`, {
       method: 'GET'
@@ -267,26 +197,13 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
       const jsonData = await res.json();
       if (res.ok && jsonData.poll && jsonData.options) {
         poll.title = jsonData.poll.title;
-        setOptions(jsonData.options); // refresh options + votes
-        setHasVoted(false);           // or set true based on backend if you add that later
+        setOptions(jsonData.options); 
+        setHasVoted(false);           
         onUpdated();
       } else {
         setAlertMsg(jsonData.message ?? "Failed to refresh poll.");
       }
     })
-    /*
-      .then(async (res: Response) => {
-        const jsonData = await res.json();
-        if (res.status == 200 && jsonData.poll) {
-          const newPoll: Poll = jsonData.poll;
-          poll.results = newPoll.results;
-          poll.title = newPoll.title;
-          poll.options = newPoll.options;
-          onUpdated();
-        } else {
-          setAlertMsg(jsonData.message);
-        }
-      }) */
       .catch((error: Error) => {
         setAlertMsg(error.message);
       })
@@ -297,15 +214,6 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
       <div
         className="bg-[#ff0000] pb-4 rounded text-lg font-mono border-solid border-1 border-[#ffce00]"
       >
-          <div className="pol-poll-header rounded px-7" style={{backgroundImage: poll.imageURL ? `
-             linear-gradient(
-      rgba(0, 0, 0, 0.65),
-      rgba(0, 0, 0, 0.65)
-    ),
-            url(${poll.imageURL})
-            `:''}}>
-            <span className="text-xl">{poll.title}</span>
-          </div>
           <div className="px-6">
           <div className="mb-4">
           {alertMsg && (
@@ -314,25 +222,21 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
         </div>
         <ul className="space-x-0 space-y-3 mt-3">
          {hasVoted ? (
-        // after voting: show results from backend
+       
          <VotedOptions options={options} />
          ) : (
-        // before voting: show option texts, mapped from backend objects
+     
         <UnvotedOptions
           options={options.map((opt) => opt.text)}
           onVote={(index) => submitVote(index)}
         />
         )} 
-        {/* {poll.hasVoted && poll.results && poll.results.length > 0 ? 
-        <VotedOptions options={poll.results}></VotedOptions>
-        :
-        <UnvotedOptions options={poll.options} onVote={(index) => submitVote(index)}></UnvotedOptions>
-      } */}
+    
         </ul>
         {poll.isOwnPoll && (
           <div className="mt-4 ml-3">
             {
-            /*Edit Button */
+        
             }
             {!poll.hasVotes &&
             <button
@@ -346,7 +250,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
             </button>
             }
 
-            {/*Delete button */}
+ 
             <button
               className="pol-iconbtn mr-4"
               onClick={() => {
@@ -367,7 +271,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
 
       </div>
 
-      {/*This is the editing modal */}
+  
       {isBeingEdited && (
         <Modal
           onDismiss={() => setIsBeingEdited(false)}
@@ -380,7 +284,6 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
               setIsBeingEdited(false);
               poll.title = editedPoll.title;
               poll.options = editedPoll.options;
-              poll.imageURL = editedPoll.imageURL;
               if(editedPoll.results) {
                 poll.results = editedPoll.results;
               }

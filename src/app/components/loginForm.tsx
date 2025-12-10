@@ -32,7 +32,7 @@ const LoginForm: React.FC<LoginFormProps> = ({onLogin, initialError}) => {
                 const jsonData = await response.json();
                 console.log(jsonData);
 
-                // Java/spring boot returns { userId, username, displayName }
+         
                 userContext.setUser({
                     username: jsonData.username,
                     displayName: jsonData.displayName,

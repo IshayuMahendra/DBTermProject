@@ -9,9 +9,7 @@ import { useUser } from "../provider/userProvider";
 import LoginForm from "./loginForm";
 import Modal from "./modal";
 import SignupForm from "./signupForm";
-import Image from "next/image";
 
-//Nav bar, removes logout, user name and profile if use is not logged in
 const NavBar: React.FC = () => {
     const userProvider = useUser();
     const searchParams = useSearchParams()
@@ -26,7 +24,6 @@ const NavBar: React.FC = () => {
 
     const [showSignupModal, setShowSignupModal] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
-    const [showQR, setShowQR] = useState(false);
 
     const doLogout = () => {
         fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/auth/logout`, {
@@ -48,9 +45,6 @@ const NavBar: React.FC = () => {
                 <div className="ml-auto space-x-3 md:space-x-6 flex items-center">
                     {userProvider.isLoggedIn ?
                     <>
-                    <button className="pol-iconbtn" onClick={() => setShowQR(true)}>
-                                <FontAwesomeIcon icon={faQrcode}></FontAwesomeIcon>
-                            </button>
                         <span className="hidden md:inline-block">Hello, {userProvider.user?.displayName}</span>
                         <img className="inline-block rounded-full border-3 h-full" src="img/avatar.webp"></img>
                         <button className="pol-iconbtn" onClick={doLogout}>
@@ -79,26 +73,7 @@ const NavBar: React.FC = () => {
                             }} />
                         </Modal>
                     }
-                    {showQR && (
-                        <Modal
-                            onDismiss={() => setShowQR(false)}
-                            transitionSeconds={0.3}
-                            bgColor="#505050"
-                            fgColor="#fff5c3"
-                        >
-                            <div className="pol-modal-large">
-                                <Image
-                                    src={"/img/qr.svg"}
-                                    alt={"QR Code linking back to pollster.kendrick.to"}
-                                    width={0}
-                                    height={0}
-                                    sizes="100vw"
-                                    style={{ width: '100%', height: 'auto' }} // optional
-                                    className="bg-[#AAC789]"
-                                />
-                            </div>
-                        </Modal>
-                    )}
+            
                 </div>
             </div>
         </nav>
