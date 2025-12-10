@@ -42,4 +42,4 @@ next-env.d.ts
 
 # Maven/Gradle
 *.class
-Backend/target/
+Backend/target
