@@ -1,6 +1,5 @@
 import LeftSidebar from "../components/LeftBar"
 import NavBar from "../components/navbar"
-import RightSidebar from "../components/RightBar"
 
 export const metadata = {
   title: 'UGA Pollss',
@@ -26,11 +25,6 @@ export default function RootLayout({
                     <main className="flex-1">
                     {children}
                     </main>
-
-                    {/* Right Sidebar */}
-                    <div className="w-full lg:w-1/4 xl:w-1/5">
-                        <RightSidebar />
-                    </div>
                 </div>
             </div>
   )
