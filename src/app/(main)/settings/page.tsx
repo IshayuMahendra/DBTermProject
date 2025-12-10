@@ -44,12 +44,13 @@ const SettingsPage: React.FC = () => {
     setIsSubmitting(true);
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/auth/update-password`, // <-- your groupmate's endpoint
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/auth/update-password`, 
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
           body: JSON.stringify({
-            userId: user.userId,   // uses your existing user context
+            userId: user.userId,  
             oldPassword: oldPassword,
             newPassword: newPassword,
           }),
