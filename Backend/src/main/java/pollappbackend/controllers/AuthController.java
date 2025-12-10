@@ -1,6 +1,5 @@
 package pollappbackend.controllers;
 
-
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,6 @@ public class AuthController {
         this.userService = userService;
     }
 
-    // DTO for incoming JSON
     public static class RegisterRequest {
         public String username;
         public String password;
@@ -51,7 +49,6 @@ public class AuthController {
         return ResponseEntity.ok("User registered successfully.");
     }
 
-    // DTO for incoming JSON
     public static class LoginRequest {
         public String username;
         public String password;
@@ -93,8 +90,8 @@ public class AuthController {
         public Integer userId;
         public String username;
         public String displayName;
-    } // LoginResponse
-    
+    }
+
     public static class UpdatePasswordRequest {
         public Integer userId;
         public String oldPassword;
@@ -129,5 +126,8 @@ public class AuthController {
         );
     }
 
-
-} // AuthController
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        return ResponseEntity.ok(Map.of("message", "Logged out successfully."));
+    }
+}
