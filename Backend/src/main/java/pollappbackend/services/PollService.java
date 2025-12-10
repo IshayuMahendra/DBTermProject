@@ -242,4 +242,22 @@ public class PollService {
         return polls;
     } // getPollsByCreator
 
+    public boolean hasUserVoted(int pollId, int userId) {
+        String sql = "SELECT 1 FROM Vote WHERE poll_id = ? AND user_id = ? LIMIT 1";
+
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, pollId);
+            stmt.setInt(2, userId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next(); // true if at least one row
+            } // try
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } // try catch
+    } // hasUserVoted
+
 } // PollService

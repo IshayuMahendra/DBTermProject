@@ -58,10 +58,30 @@ public class PollController {
     public static class PollResponse {
         public Poll poll;
         public List<PollOption> options;
+        public boolean hasVoted;
     } // PollResponse
 
     @GetMapping("/{pollId}")
-    public ResponseEntity<?> getPoll(@PathVariable int pollId) {
+    public ResponseEntity<?> getPoll(@PathVariable int pollId, @RequestParam(required = false) Integer userId) {
+        Poll poll = pollService.getPollById(pollId);
+    if (poll == null) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("Poll not found");
+    }
+
+    List<PollOption> options = pollService.getOptionsForPoll(pollId);
+
+    PollResponse resp = new PollResponse();
+    resp.poll = poll;
+    resp.options = options;
+
+    if (userId != null) {
+        resp.hasVoted = pollService.hasUserVoted(pollId, userId);
+    }
+
+    return ResponseEntity.ok(resp);
+        
+        /* 
         Poll poll = pollService.getPollById(pollId);
         if (poll == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -75,6 +95,7 @@ public class PollController {
         resp.options = options;
 
         return ResponseEntity.ok(resp);
+        */
     } // getPoll
 
     @GetMapping
