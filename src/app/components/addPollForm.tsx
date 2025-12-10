@@ -2,14 +2,12 @@
 import { faHatWizard, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import ImagePicker from "./imagePicker";
 import { useUser } from "../provider/userProvider";
 
 
 export interface LocalPoll {
   title: string;
   options: string[]
-  image: File | null;
 }
 
 export interface PollOption {
@@ -24,7 +22,6 @@ export interface Poll {
   options: string[];
   results?: PollOption[];
   createdAt: string;
-  imageURL: string | undefined;
   isOwnPoll?: boolean;
   hasVoted: boolean;
   hasVotes: boolean;
@@ -39,7 +36,6 @@ const AddPollForm: React.FC<AddPollFormProps> = ({ onCompletion, pollToEdit }) =
   const [question, setQuestion] = useState(pollToEdit ? pollToEdit.title : "");
   const [options, setOptions] = useState(pollToEdit ? pollToEdit.options:[""] );
   const [error, setError] = useState<string|undefined>(undefined);
-  const [imageFile, setImageFile] = useState<File | undefined>(undefined);
   const { user, isLoggedIn } = useUser();
 
 
@@ -60,7 +56,7 @@ const AddPollForm: React.FC<AddPollFormProps> = ({ onCompletion, pollToEdit }) =
     setOptions(updated);
   };
 
-const handleNewPoll = async (localPoll: { title: string; options: string[]; image: File | null }) => {
+const handleNewPoll = async (localPoll: { title: string; options: string[];}) => {
   if (!isLoggedIn || !user || user.userId == null) {
     setError("You must be logged in to create a poll.");
     return;
@@ -76,7 +72,6 @@ const handleNewPoll = async (localPoll: { title: string; options: string[]; imag
         title: localPoll.title,
         options: localPoll.options,
         creatorId: user.userId,
-        imageURL: undefined, // handle image later
       }),
     });
 
@@ -93,7 +88,6 @@ const handleNewPoll = async (localPoll: { title: string; options: string[]; imag
       title: localPoll.title,
       options: localPoll.options,
       createdAt: new Date().toISOString(),
-      imageURL: undefined,
       isOwnPoll: true,
       hasVoted: false,
       hasVotes: false,
@@ -106,54 +100,9 @@ const handleNewPoll = async (localPoll: { title: string; options: string[]; imag
   }
 };
 
-  /*
-  const handleNewPoll = (localPoll: LocalPoll) => {
-    const formData = new FormData();
-    formData.append('question', localPoll.title);
-    localPoll.options.forEach((option) => formData.append('option', option))
-    if (localPoll.image) {
-      formData.append('image', localPoll.image);
-    }
-    fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/poll/create`, {
-      method: "POST",
-      body: formData
-    }).then(async (res: Response) => {
-      const jsonData = await res.json();
-      if (res.status == 201) {
-        const poll: Poll = jsonData["poll"];
-        onCompletion(poll);
-      } else {
-        setError(jsonData["message"]);
-      }
-    }).catch((error: Error) => {
-      setError(error.message);
-    });
+ 
 
-  }; */
-
-  const handleEditPoll = (id:string, localPoll: LocalPoll) => {
-    const formData = new FormData();
-    formData.append('question', localPoll.title);
-    localPoll.options.forEach((option) => formData.append('option', option))
-    if (localPoll.image) {
-      formData.append('image', localPoll.image);
-    }
-    fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/poll/${id}`, {
-      method: "PUT",
-      body: formData
-    }).then(async (res: Response) => {
-      const jsonData = await res.json();
-      if (res.status == 200) {
-        const editedPoll: Poll = jsonData["poll"];
-        onCompletion(editedPoll);
-      } else {
-        setError(jsonData["message"]);
-      }
-    }).catch((error: Error) => {
-      setError(error.message);
-    });
-
-  };
+ 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -173,40 +122,17 @@ const handleNewPoll = async (localPoll: { title: string; options: string[]; imag
     const localPoll = {
       title: question,
       options: cleanedOptions,
-      image: imageFile ?? null
     };
 
-    if(pollToEdit) {
-      handleEditPoll(pollToEdit.pollId, localPoll);
-      return;
-    }
+  
     handleNewPoll(localPoll);
   }
 
-  const generatePoll = async () => {
-      fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/ai/suggest_poll`, {
-        method: 'GET'
-      }).then(async (r) => {
-        const jsonData = await r.json();
-        if(r.status == 200) {
-          setQuestion(jsonData.title);
-          setOptions(jsonData.options);
-        } else {
-          setError(jsonData.message);
-        }
-      }).catch((e) => {
-        if(e instanceof Error) {
-          setError(e.message);
-          return;
-        }
-        setError("unknown error");
-      })
-  };
+
 
   return (
     <>
-            <span className="text-white text-lg mb-6">Create/Edit Poll</span>
-      <ImagePicker onImage={setImageFile} initialImageURL={pollToEdit?.imageURL} onError={setError} ></ImagePicker>
+            <span className="text-white text-lg mb-6">Create</span>
       <form
         onSubmit={handleSubmit}
         className="w-full text-white px-6 font-mono relative mt-6"
@@ -219,10 +145,6 @@ const handleNewPoll = async (localPoll: { title: string; options: string[]; imag
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
           />
-          <button className="pol-button pol-button-form mt-0" onClick={(e) => {
-            e.preventDefault();
-            generatePoll();
-          }}><FontAwesomeIcon icon={faHatWizard}></FontAwesomeIcon> Generate</button>
         </div>
 
         {options.map((opt, idx) => (
@@ -235,16 +157,6 @@ const handleNewPoll = async (localPoll: { title: string; options: string[]; imag
               onChange={(e) => handleOptionChange(idx, e.target.value)}
               className="flex-1 p-3 text-black bg-gray-300 rounded placeholder:text-black"
             />
-            {options.length > 2 && (
-              <button
-                type="button"
-                onClick={() => handleDeleteOption(idx)}
-                className="text-gray-300 hover:text-white"
-                title="Remove option"
-              >
-                <FontAwesomeIcon icon={faTrash} />
-              </button>
-            )}
           </div>
         ))}
 

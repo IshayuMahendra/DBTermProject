@@ -1,0 +1,15 @@
+Security Description
+
+For this project, we made sure that user passwords are stored safely rather than in
+plain text. To do this, we used the bcrypt library, which is a common and reliable
+way to protect passwords in real applications.
+
+When a user creates an account, the password they enter is immediately hashed with
+bcrypt before it is saved in the database. Bcrypt also adds a unique salt each time,
+so even if two people use the same password, the stored hashes will look completely
+different. This makes it much harder for anyone to guess or reverse a password just
+by looking at the database.
+
+During login, we do not compare raw passwords. Instead, the backend takes the password
+the user enters, hashes it again with bcrypt, and checks if it matches the hash we
+already have stored. 

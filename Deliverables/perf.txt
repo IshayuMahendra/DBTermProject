@@ -1,0 +1,54 @@
+
+-- Index 1: speed up votes lookup by option (used when showing poll results)
+CREATE INDEX idx_vote_option_id
+    ON Vote(option_id);
+
+-- Index 2: speed up votes lookup by poll + user (used to check if a user voted and to find unvoted polls)
+CREATE INDEX idx_vote_poll_user
+    ON Vote(poll_id, user_id);
+
+Queries Affected
+
+SELECT o.option_id, o.poll_id, o.text,
+       COUNT(v.vote_id) AS votes_for_option
+FROM PollOption o
+LEFT JOIN Vote v ON v.option_id = o.option_id
+WHERE o.poll_id = ?
+GROUP BY o.option_id, o.poll_id, o.text
+ORDER BY o.option_id;
+
+Before adding idx_vote_option_id:
+  - Execution time: __________ ms
+
+- After adding idx_vote_option_id:
+  - Execution time: __________ ms
+
+
+
+SELECT DISTINCT p.poll_id, p.title, p.created_at, p.updated_at, p.creator_id, p.image_id
+FROM Poll p
+LEFT JOIN Vote v
+  ON p.poll_id = v.poll_id
+  AND v.user_id = ?
+WHERE v.vote_id IS NULL
+ORDER BY p.created_at DESC;
+
+- Before adding idx_vote_poll_user:
+  - Execution time: __________ ms
+
+- After adding idx_vote_poll_user:
+  - Execution time: __________ ms
+
+
+
+SELECT COUNT(*) FROM Vote WHERE poll_id = ? AND user_id = ?;
+
+- Before adding idx_vote_poll_user:
+  - Execution time: __________ ms
+
+- After adding idx_vote_poll_user:
+  - Execution time: __________ ms
+
+
+
+  

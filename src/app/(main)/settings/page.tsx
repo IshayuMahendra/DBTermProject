@@ -60,7 +60,7 @@ const SettingsPage: React.FC = () => {
       try {
         data = await res.json();
       } catch {
-        // backend might return plain text; ignore parse error
+        
       }
 
       if (!res.ok) {
@@ -84,7 +84,7 @@ const SettingsPage: React.FC = () => {
       <div className="w-full md:w-2/3 lg:w-1/2 space-y-8">
         <h1 className="text-2xl font-mono mb-4">Settings</h1>
 
-        {/* Change Password */}
+        
         <div className="bg-[#1E4147] p-4 rounded border border-[#AAC789] text-white">
           <h2 className="text-xl mb-2">Change Password</h2>
 

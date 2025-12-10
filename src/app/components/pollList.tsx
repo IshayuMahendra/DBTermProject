@@ -13,11 +13,10 @@ interface PollListProps {
   collectionType: "profile" | "home" | "saved"
 }
 
-//Main feed page that displaus all the polls
+
 const PollList: React.FC<PollListProps> = ({ collectionType }) => {
   const [showModal, setShowModal] = useState(false);
 
-  //State for the polls
   const [polls, setPolls] = useState<Poll[]>([
 
   ]);
@@ -61,7 +60,7 @@ const PollList: React.FC<PollListProps> = ({ collectionType }) => {
     }
   }, [isLoggedIn]);
 
-  //Main central page
+  
   return (
     <>
       <div className="w-full h-full bg-[#383420] text-[#ffffff] flex flex-col items-center">
@@ -91,7 +90,6 @@ const PollList: React.FC<PollListProps> = ({ collectionType }) => {
           </div>
         </div>
 
-        {/*This is the create modal*/}
         {showModal && (
           <Modal
             onDismiss={() => setShowModal(false)}

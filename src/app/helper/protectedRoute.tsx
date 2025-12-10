@@ -8,7 +8,7 @@ interface ProtectedRouteProps {
     children: ReactNode;
 };
 
-//ProtectedRoute: a way to verify that a user is authenticated client-side
+
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }: ProtectedRouteProps) => {
     const router = useRouter();
     const { isLoggedIn } = useUser();
