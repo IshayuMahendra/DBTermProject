@@ -1,6 +1,8 @@
 package pollappbackend.controllers;
 
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -92,4 +94,39 @@ public class AuthController {
         public String displayName;
     } // LoginResponse
     
+    public static class UpdatePasswordRequest {
+        public Integer userId;
+        public String oldPassword;
+        public String newPassword;
+    }
+
+    @PostMapping("/update-password")
+    public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordRequest req) {
+        if (req.userId == null ||
+            req.oldPassword == null || req.oldPassword.isBlank() ||
+            req.newPassword == null || req.newPassword.isBlank()) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(Map.of("message", "All fields are required."));
+        }
+
+        boolean updated = userService.updatePassword(
+                req.userId,
+                req.oldPassword,
+                req.newPassword
+        );
+
+        if (!updated) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("message", "Current password is incorrect or user not found."));
+        }
+
+        return ResponseEntity.ok(
+                Map.of("message", "Password updated successfully.")
+        );
+    }
+
+
 } // AuthController

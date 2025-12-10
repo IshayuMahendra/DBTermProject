@@ -48,7 +48,6 @@ const SettingsPage: React.FC = () => {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          credentials: "include",
           body: JSON.stringify({
             userId: user.userId,  
             oldPassword: oldPassword,

@@ -95,4 +95,42 @@ public class UserService {
             return null;
         }
     }
+
+    public boolean updatePassword(int userId, String oldPassword, String newPassword) {
+        String selectSql = "SELECT password FROM `User` WHERE user_id = ?";
+        String updateSql = "UPDATE `User` SET password = ? WHERE user_id = ?";
+
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement selectStmt = conn.prepareStatement(selectSql)) {
+
+            selectStmt.setInt(1, userId);
+            ResultSet rs = selectStmt.executeQuery();
+
+            if (!rs.next()) {
+                // user not found
+                return false;
+            }
+
+            String storedHash = rs.getString("password");
+
+            if (!encoder.matches(oldPassword, storedHash)) {
+                return false;
+            }
+
+            String newHash = encoder.encode(newPassword);
+
+            try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
+                updateStmt.setString(1, newHash);
+                updateStmt.setInt(2, userId);
+                updateStmt.executeUpdate();
+            }
+
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
