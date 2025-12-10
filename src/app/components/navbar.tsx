@@ -34,15 +34,15 @@ const NavBar: React.FC = () => {
         }).then(async (response: Response) => {
             if (response.status == 200) {
                 router.push("/home");
-                userProvider.setUser(undefined);
+                userProvider.setUser(null);
                 userProvider.setIsLoggedIn(false);
             }
         })
     };
 
     return (
-        <nav className="h-20 px-8 py-4 bg-[#0E2A2D] text-[#AAC789] flex border-solid border-[#667753] border-b-1">
-            <div className="w-1/2 text-lg sm:text-4xl font-mono mt-auto mb-auto"> <Link href="/home" className="cursor-pointer hover:underline">Pollster.</Link></div>
+        <nav className="h-20 px-8 py-4 bg-[#ff5a00] text-[#fff5c3] flex border-solid border-[#667753] border-b-1">
+            <div className="w-1/2 text-lg sm:text-4xl font-sans-serif mt-auto mb-auto"> <Link href="/home" className="cursor-pointer hover:underline">UGAPolls</Link></div>
 
             <div className="w-1/2 flex">
                 <div className="ml-auto space-x-3 md:space-x-6 flex items-center">
@@ -83,8 +83,8 @@ const NavBar: React.FC = () => {
                         <Modal
                             onDismiss={() => setShowQR(false)}
                             transitionSeconds={0.3}
-                            bgColor="#1E4147"
-                            fgColor="#FFF"
+                            bgColor="#505050"
+                            fgColor="#fff5c3"
                         >
                             <div className="pol-modal-large">
                                 <Image

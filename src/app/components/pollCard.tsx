@@ -233,7 +233,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
   return (
     <>
       <div
-        className="bg-[#1E4147] pb-4 rounded text-lg font-mono border-solid border-1 border-[#AAC789]"
+        className="bg-[#ff0000] pb-4 rounded text-lg font-mono border-solid border-1 border-[#ffce00]"
       >
           <div className="pol-poll-header rounded px-7" style={{backgroundImage: poll.imageURL ? `
              linear-gradient(
@@ -310,8 +310,8 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
         <Modal
           onDismiss={() => setIsBeingEdited(false)}
           transitionSeconds={0.3}
-          bgColor="#1E4147"
-          fgColor="#FFF"
+          bgColor="#ff0000"
+          fgColor="#ff9a00"
         >
           <div className="pol-modal-large">
             <AddPollForm onCompletion={(editedPoll) => {

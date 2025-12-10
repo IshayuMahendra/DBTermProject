@@ -60,7 +60,7 @@ const PollList: React.FC<PollListProps> = ({ collectionType }) => {
   //Main central page
   return (
     <>
-      <div className="w-full h-full bg-[#12282C] text-[#ffffff] flex flex-col items-center">
+      <div className="w-full h-full bg-[#383420] text-[#ffffff] flex flex-col items-center">
         <div className="w-full md:w-2/3 lg:w-full xl:w-2/3 space-y-6 p-6">
           {polls.map((poll) => (
             <PollCard poll={poll} key={poll.pollId} onDelete={() => {
@@ -92,8 +92,8 @@ const PollList: React.FC<PollListProps> = ({ collectionType }) => {
           <Modal
             onDismiss={() => setShowModal(false)}
             transitionSeconds={0.3}
-            bgColor="#1E4147"
-            fgColor="#FFF"
+            bgColor="#ff0000"
+            fgColor="#ffce00"
           >
             <div className="pol-modal-large">
               <AddPollForm onCompletion={(newPoll) => {

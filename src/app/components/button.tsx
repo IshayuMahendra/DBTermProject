@@ -7,7 +7,7 @@ const Button1: React.FC = () => {
 
     return (
         <>
-            <button className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700" onClick={() => setShow(true)}>
+            <button className="bg-red-600 text-black px-6 py-2 rounded-full hover:bg-red-700" onClick={() => setShow(true)}>
                 Hello World
             </button>
             {show && <p className="mt-2 text-gray-700">Button was clicked!</p>}

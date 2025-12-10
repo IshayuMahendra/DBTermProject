@@ -11,8 +11,8 @@ export default function NotFound() {
             <NavBar />
         
     
-                <main className="ml-auto mr-auto flex-1 p-6 mt-80 text-[#FFFFF]">
-                    <h1 className="text-white">404 NOT FOUND</h1>
+                <main className="ml-auto mr-auto flex-1 p-6 mt-80 text-[#fff5c3]">
+                    <h1 className="text-white">404 CAN'T FIND THAT PAGE</h1>
                 </main>
               
 

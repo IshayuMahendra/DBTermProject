@@ -16,7 +16,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }: ProtectedRo
         if (!isLoggedIn) {
             const errorParams = new URLSearchParams();
             errorParams.set("login", "true");
-            errorParams.set("error", "You must be logged in to access that page.")
+            errorParams.set("error", "Login to view.")
             router.push(`/home?${errorParams.toString()}`);
         }
     }, []);

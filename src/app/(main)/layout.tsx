@@ -3,8 +3,8 @@ import NavBar from "../components/navbar"
 import RightSidebar from "../components/RightBar"
 
 export const metadata = {
-  title: 'Pollster',
-  description: 'your vote. your polls. your impact.',
+  title: 'UGA Pollss',
+  description: 'A polling application for University of Georgia students to create and participate in polls',
 }
 
 export default function RootLayout({

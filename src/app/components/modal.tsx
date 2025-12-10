@@ -27,9 +27,9 @@ const Modal: React.FC<ModalProps> = ({ children, onDismiss, transitionSeconds, b
         <>
             <div className="pol-modal-wrapper">
             <div className="pol-modal-overlay" onClick={() => beginDismiss()} style={{transitionDuration: transitionSeconds+"s", opacity: modalOpacity}}></div>
-            <div className="pol-modal w-full sm:w-auto" style={{transitionDuration: transitionSeconds+"s", opacity: modalOpacity, backgroundColor: bgColor ? bgColor: '#AAC789'}}>
+            <div className="pol-modal w-full sm:w-auto" style={{transitionDuration: transitionSeconds+"s", opacity: modalOpacity, backgroundColor: bgColor ? bgColor: '	#ff0000'}}>
                 <div className="pol-modal-header">
-                    <button className="pol-button ml-auto pol-btn-x pol-text-dark" style={{color: fgColor ? fgColor: "#1E4147"}} onClick={() => beginDismiss()}><FontAwesomeIcon icon={faX}/></button>
+                    <button className="pol-button ml-auto pol-btn-x pol-text-dark" style={{color: fgColor ? fgColor: "#ffce00"}} onClick={() => beginDismiss()}><FontAwesomeIcon icon={faX}/></button>
                 </div>
                 <div className="pol-modal-content">
                     {children}
