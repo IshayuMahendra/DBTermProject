@@ -39,4 +39,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 /public/uploads/*
-/Backend/target/*
+
+# Maven/Gradle
+*.class
+Backend/target
