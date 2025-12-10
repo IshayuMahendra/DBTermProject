@@ -84,7 +84,7 @@ public class UserService {
                     User u = new User();
                     u.setUserId(rs.getInt("user_id"));
                     u.setUsername(rs.getString("username"));
-                    u.setPassword(rs.getString("password"));  // Hashed – don't expose in prod
+                    u.setPassword(rs.getString("password"));  
                     u.setDisplayName(rs.getString("display_name"));
                     return u;
                 }

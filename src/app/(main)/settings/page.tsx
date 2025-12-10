@@ -46,7 +46,7 @@ const SettingsPage: React.FC = () => {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/auth/update-password`, 
         {
-          method: "POST",
+          method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             userId: user.userId,  

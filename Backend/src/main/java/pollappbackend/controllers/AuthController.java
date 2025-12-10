@@ -100,7 +100,7 @@ public class AuthController {
         public String newPassword;
     }
 
-    @PostMapping("/update-password")
+    @PutMapping("/update-password")
     public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordRequest req) {
         if (req.userId == null ||
             req.oldPassword == null || req.oldPassword.isBlank() ||
