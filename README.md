@@ -17,7 +17,7 @@ cd Backend
 mvn clean install
 mvn spring-boot:run
 
-To Run Frontend (it is run from root):
+To Run Frontend (it is run from root or right click on SRC -> integrated terminal):
 npm install
 npm run dev
 
