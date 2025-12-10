@@ -116,6 +116,24 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
 
   //Delete poll function 
   const handleDeletePoll = () => {
+  setAlertMsg(undefined);
+  fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls/${poll.pollId}`, {
+    method: "DELETE",
+  })
+    .then(async (res: Response) => {
+      if (res.ok) {
+        onDelete(); // remove from list
+      } else {
+        const text = await res.text();
+        setAlertMsg(text);
+      }
+    })
+    .catch((error: Error) => {
+      setAlertMsg(error.message);
+    });
+};
+  /*
+  const handleDeletePoll = () => {
     setAlertMsg(undefined);
     fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/poll/${poll.pollId}`, {
       method: 'DELETE'
@@ -131,6 +149,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
         setAlertMsg(error.message);
       })
   }
+      */
 
 
   const submitVote = async (optionIndex: number) => {
@@ -211,9 +230,20 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
   */
 
   const doRefresh = () => {
-    fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/poll/${poll.pollId}`, {
+    fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls/${poll.pollId}`, {
       method: 'GET'
+    }).then(async (res: Response) => {
+      const jsonData = await res.json();
+      if (res.ok && jsonData.poll && jsonData.options) {
+        poll.title = jsonData.poll.title;
+        setOptions(jsonData.options); // refresh options + votes
+        setHasVoted(false);           // or set true based on backend if you add that later
+        onUpdated();
+      } else {
+        setAlertMsg(jsonData.message ?? "Failed to refresh poll.");
+      }
     })
+    /*
       .then(async (res: Response) => {
         const jsonData = await res.json();
         if (res.status == 200 && jsonData.poll) {
@@ -225,7 +255,8 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
         } else {
           setAlertMsg(jsonData.message);
         }
-      }).catch((error: Error) => {
+      }) */
+      .catch((error: Error) => {
         setAlertMsg(error.message);
       })
   }

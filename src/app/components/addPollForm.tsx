@@ -3,11 +3,13 @@ import { faHatWizard, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import ImagePicker from "./imagePicker";
+import { useUser } from "../provider/userProvider";
+
 
 export interface LocalPoll {
   title: string;
   options: string[]
-  image: File | undefined;
+  image: File | null;
 }
 
 export interface PollOption {
@@ -38,6 +40,8 @@ const AddPollForm: React.FC<AddPollFormProps> = ({ onCompletion, pollToEdit }) =
   const [options, setOptions] = useState(pollToEdit ? pollToEdit.options:[""] );
   const [error, setError] = useState<string|undefined>(undefined);
   const [imageFile, setImageFile] = useState<File | undefined>(undefined);
+  const { user, isLoggedIn } = useUser();
+
 
   const handleOptionChange = (index: number, value: string) => {
     const updated = [...options];
@@ -56,6 +60,53 @@ const AddPollForm: React.FC<AddPollFormProps> = ({ onCompletion, pollToEdit }) =
     setOptions(updated);
   };
 
+const handleNewPoll = async (localPoll: { title: string; options: string[]; image: File | null }) => {
+  if (!isLoggedIn || !user || user.userId == null) {
+    setError("You must be logged in to create a poll.");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: localPoll.title,
+        options: localPoll.options,
+        creatorId: user.userId,
+        imageURL: undefined, // handle image later
+      }),
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      setError(text);
+      return;
+    }
+
+    const data = await res.json(); 
+
+    const newPoll: Poll = {
+      pollId: data.pollId,
+      title: localPoll.title,
+      options: localPoll.options,
+      createdAt: new Date().toISOString(),
+      imageURL: undefined,
+      isOwnPoll: true,
+      hasVoted: false,
+      hasVotes: false,
+      results: [],
+    };
+
+    onCompletion(newPoll);  
+  } catch (err: any) {
+    setError(err.message ?? "Failed to create poll.");
+  }
+};
+
+  /*
   const handleNewPoll = (localPoll: LocalPoll) => {
     const formData = new FormData();
     formData.append('question', localPoll.title);
@@ -78,7 +129,7 @@ const AddPollForm: React.FC<AddPollFormProps> = ({ onCompletion, pollToEdit }) =
       setError(error.message);
     });
 
-  };
+  }; */
 
   const handleEditPoll = (id:string, localPoll: LocalPoll) => {
     const formData = new FormData();
@@ -122,7 +173,7 @@ const AddPollForm: React.FC<AddPollFormProps> = ({ onCompletion, pollToEdit }) =
     const localPoll = {
       title: question,
       options: cleanedOptions,
-      image: imageFile
+      image: imageFile ?? null
     };
 
     if(pollToEdit) {
