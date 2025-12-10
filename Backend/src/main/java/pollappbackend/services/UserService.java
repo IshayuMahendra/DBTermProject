@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,15 +14,14 @@ import pollappbackend.models.User;
 @Service
 public class UserService {
     private final DataSource dataSource;
-    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();  // BCrypt encoder
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    @Autowired
     public UserService(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
     public boolean usernameExists(String username) {
-        String sql = "SELECT COUNT(*) FROM `User` WHERE username = ?";  // Fixed backticks
+        String sql = "SELECT COUNT(*) FROM `User` WHERE username = ?";
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -40,13 +38,13 @@ public class UserService {
     }
 
     public void createUser(String username, String password, String displayName) {
-        String hashedPassword = encoder.encode(password);  // Hash password with BCrypt
+        String hashedPassword = encoder.encode(password);
         String sql = "INSERT INTO `User` (username, password, display_name) VALUES (?, ?, ?)";
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username);
-            ps.setString(2, hashedPassword);  // Store hashed version
+            ps.setString(2, hashedPassword);
             ps.setString(3, displayName);
             ps.executeUpdate();
         } catch (Exception e) {
@@ -64,9 +62,29 @@ public class UserService {
 
             if (rs.next()) {
                 String storedPassword = rs.getString("password");
-                return encoder.matches(password, storedPassword);  // BCrypt compare (plain vs hashed)
+                return encoder.matches(password, storedPassword);
             }
             return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean changePassword(String username, String oldPassword, String newPassword) {
+        if (!validateLogin(username, oldPassword)) {
+            return false;  // Old password wrong
+        }
+
+        String hashedNewPassword = encoder.encode(newPassword);
+        String sql = "UPDATE `User` SET password = ? WHERE username = ?";
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, hashedNewPassword);
+            ps.setString(2, username);
+            int rowsUpdated = ps.executeUpdate();
+            return rowsUpdated > 0;
         } catch (Exception e) {
             e.printStackTrace();
             return false;

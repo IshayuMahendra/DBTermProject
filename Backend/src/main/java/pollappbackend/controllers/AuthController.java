@@ -5,7 +5,12 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import pollappbackend.services.UserService;
 
 @RestController
@@ -16,20 +21,17 @@ public class AuthController {
 
     public AuthController(UserService userService) {
         this.userService = userService;
-    } // AuthController
+    }
 
     // DTO for incoming JSON
     public static class RegisterRequest {
         public String username;
         public String password;
         public String displayName;
-
-        // getters/setters (optional for now since fields are public)
-    } // RegisterRequest
+    }
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest req) {
-
         if (req.username == null || req.username.isBlank()
                 || req.password == null || req.password.isBlank()
                 || req.displayName == null || req.displayName.isBlank()) {
@@ -44,17 +46,16 @@ public class AuthController {
                     .body("Username already exists.");
         }
 
-        // TODO: hash password before saving
         userService.createUser(req.username, req.password, req.displayName);
 
         return ResponseEntity.ok("User registered successfully.");
-    } // register
+    }
 
     // DTO for incoming JSON
     public static class LoginRequest {
         public String username;
         public String password;
-    } // LoginRequest
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest req) {
@@ -78,7 +79,7 @@ public class AuthController {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("User record not found after login.");
-        } // if
+        }
 
         LoginResponse resp = new LoginResponse();
         resp.userId = user.getUserId();
@@ -86,7 +87,7 @@ public class AuthController {
         resp.displayName = user.getDisplayName();
 
         return ResponseEntity.ok(resp);
-    } // login
+    }
 
     public static class LoginResponse {
         public Integer userId;
