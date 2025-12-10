@@ -30,17 +30,17 @@ const SplashPage: React.FC = () => {
                 }}>?</button>
             </div>
             <div className="splash-content">
-                <h1>Pollster</h1>
-                <p><Typer typedString="your vote. your polls. your impact." msSpeed={40}></Typer></p>
+                <h1>UGAPolls</h1>
+                <p>A polling site for Database classmates!</p>
                 <div className="mt-4 block">
-                    <Link className="pol-button inline-block" href="/home">Enter</Link>
+                    <Link className="pol-button inline-block" href="/home">Main Page</Link>
                 </div>
             </div>
             {showModal &&
                 <Modal onDismiss={() => setShowModal(false)} transitionSeconds={0.3}>
                     <div className="text-center" style={{maxWidth: 650}}>
-                        <h2>about us</h2>
-                        <p className="mt-4">This project aims to create a social media-like service involving polls. Users can create a poll and post it on to a universal feed that others can then vote on. These polls can range from professors, classes or events at UGA. The goal of this project is to give students an easier way to share their opinion and become informed about how their peers are feeling about life on campus.</p>
+                        <h2>Info</h2>
+                        <p className="mt-4">This project is a fresh take on a student polling site using an SQL dataset. Users can create, delete, update and vote on polls that everyone using the site can participate in. It's primarily for sharing with our Database course.</p>
                     </div>
                 </Modal>
             }

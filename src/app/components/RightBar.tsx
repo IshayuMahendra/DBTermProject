@@ -30,8 +30,8 @@ const RightSidebar: React.FC = () => {
   }, []);
 
   return (
-    <aside className="pol-sidebar h-full w-full py-4 px-8 border-[#667753] border-l-0 lg:border-l-1">
-      <div className="text-md font-semibold mb-6 mt-2">Top Contributors</div>
+    <aside className="pol-sidebar h-full w-full py-4 px-8 border-[#ff5a00] border-l-0 lg:border-l-1">
+      <div className="text-md font-semibold mb-6 mt-2">Most Active Members</div>
       <ul className="space-y-5">
         {/*Mapping the array to a list -Ishayu */}
         {topUsers.map((topUser, index) => (
@@ -41,11 +41,11 @@ const RightSidebar: React.FC = () => {
               alt={topUser.displayName}
               width={50}
               height={50}
-              className="w-12 h-12 rounded-full object-cover border border-[#AAC789]"
+              className="w-12 h-12 rounded-full object-cover border border-[#ffce00]"
             />
             <div className="flex flex-col">
               <span className="font-medium">{topUser.displayName}</span>
-              <span className="text-sm text-[#88a27b]">{topUser.count} contribution(s)</span>
+              <span className="text-sm text-[#ffe808]">{topUser.count} contribution(s)</span>
             </div>
           </li>
         ))}

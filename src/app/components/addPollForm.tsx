@@ -17,7 +17,7 @@ export interface PollOption {
 
 
 export interface Poll {
-  id: string;
+  pollId: string;
   title: string;
   options: string[];
   results?: PollOption[];
@@ -126,7 +126,7 @@ const AddPollForm: React.FC<AddPollFormProps> = ({ onCompletion, pollToEdit }) =
     };
 
     if(pollToEdit) {
-      handleEditPoll(pollToEdit.id, localPoll);
+      handleEditPoll(pollToEdit.pollId, localPoll);
       return;
     }
     handleNewPoll(localPoll);

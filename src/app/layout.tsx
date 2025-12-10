@@ -1,8 +1,8 @@
 import { UserProvider } from "./provider/userProvider"
 
 export const metadata = {
-  title: 'Pollster',
-  description: 'your vote. your polls. your impact.',
+  title: 'UGA Polls',
+  description: 'A polling application for University of Georgia students to create and participate in polls',
 }
 
 export default function RootLayout({
