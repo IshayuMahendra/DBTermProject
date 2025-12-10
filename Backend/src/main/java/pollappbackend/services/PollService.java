@@ -121,8 +121,8 @@ public class PollService {
     } // getpollById
 
     public List<PollOption> getOptionsForPoll(int pollId) {
-        String sql = "SELECT option_id, poll_id, text, votes " +
-                    "FROM PollOption WHERE poll_id = ? ORDER BY option_id";
+        // shows voting results as percentages for each option on poll
+        String sql = "SELECT o.option_id, o.poll_id, o.text, COUNT(v.vote_id) AS votes_for_option FROM PollOption o LEFT JOIN Vote v ON v.option_id = o.option_id WHERE o.poll_id = ? GROUP BY o.option_id, o.poll_id, o.text ORDER BY o.option_id";
 
         List<PollOption> options = new ArrayList<>();
 
@@ -136,7 +136,7 @@ public class PollService {
                     opt.setOptionId(rs.getInt("option_id"));
                     opt.setPollId(rs.getInt("poll_id"));
                     opt.setText(rs.getString("text"));
-                    opt.setVotes(rs.getInt("votes"));
+                    opt.setVotes(rs.getInt("votes_for_option"));
                     options.add(opt);
                 }
             }
@@ -150,8 +150,8 @@ public class PollService {
     } // getOptionsForPoll
 
     public List<Poll> getAllPolls() {
-        String sql = "SELECT poll_id, title, created_at, updated_at, creator_id, image_id " +
-                    "FROM Poll ORDER BY created_at DESC";
+        // gets all polls for the home page and total votes per poll
+        String sql = "SELECT p.poll_id, p.title, p.created_at, p.updated_at, p.creator_id, p.image_id, COUNT(v.vote_id) AS total_votes FROM Poll p LEFT JOIN Vote v ON v.poll_id = p.poll_id GROUP BY p.poll_id, p.title, p.created_at, p.updated_at, p.creator_id, p.image_id ORDER BY p.created_at DESC";
 
         List<Poll> polls = new ArrayList<>();
 
@@ -179,7 +179,8 @@ public class PollService {
     } // getAllPolls
 
     public List<Poll> getUnvotedPollsForUser(int userId) {
-        String sql = "SELECT p.* FROM Poll p WHERE NOT EXISTS (SELECT 1 FROM Vote v WHERE v.poll_id = p.poll_id AND v.user_id = ?) ORDER BY p.created_at DESC";
+        // gets polls user has not voted on
+        String sql = "SELECT DISTINCT p.poll_id, p.title, p.created_at, p.updated_at, p.creator_id, p.image_id FROM Poll p LEFT JOIN Vote v ON p.poll_id = v.poll_id AND v.user_id = ? WHERE v.vote_id IS NULL ORDER BY p.created_at DESC";
 
         List<Poll> polls = new ArrayList<>();
 
