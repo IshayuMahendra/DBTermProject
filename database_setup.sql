@@ -10,9 +10,9 @@ DROP TABLE IF EXISTS Image;
 -- -------------------------------------
 CREATE TABLE User (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(20) NOT NULL,
-    display_name VARCHAR(20) NOT NULL
+    username VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    display_name VARCHAR(255) NOT NULL
 );
 
 -- -------------------------------------
