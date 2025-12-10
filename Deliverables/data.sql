@@ -1,4 +1,3 @@
--- DATA POPULATION FILE FOR UGA POLLS PROJECT
 -- Run: mysql -u root -pmysqlpass db_term_project < data.sql
 
 -- Clear data so file can be re-run safely

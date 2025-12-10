@@ -7,4 +7,13 @@ Khan - Backend assistance and many of the PDFs required for the project
 
 Technologies: React, TypeScript, SpringBoot, Java, SQL
 
+databasename: db_term_project
+username: root
+password: mysqlpass
+
+3 username/password pairs
+(testuser, testpass123)
+(kayla, pass123)
+(carnagist, pass123)
+
 The .txt and .sql delivrables are int the folder DBTermProject/Deliverables
