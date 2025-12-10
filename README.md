@@ -7,6 +7,8 @@ Khan - Backend assistance and many of the PDFs required for the project
 
 Technologies: React, TypeScript, SpringBoot, Java, SQL
 
+Data.sql is merely for showing SQL insertion but to populate the actual data we'd like you to please use our Java Data Population Tool as instructed below due to issues with hashing passwords through SQL queries when using Bcrypt.
+
 To Run Data Population Tool:
 cd Backend
 mvn clean install
