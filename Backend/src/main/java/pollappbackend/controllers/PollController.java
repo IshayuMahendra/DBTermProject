@@ -88,5 +88,11 @@ public class PollController {
         List<Poll> polls = pollService.getUnvotedPollsForUser(userId);
         return ResponseEntity.ok(polls);
     } // getUnvotedPolls
+    
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Poll>> getPollsByUser(@PathVariable int userId) {
+        List<Poll> polls = pollService.getPollsByCreator(userId);
+        return ResponseEntity.ok(polls);
+    } // getPollsByUser
 
 } // PollCOntroller

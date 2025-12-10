@@ -28,7 +28,8 @@ const PollList: React.FC<PollListProps> = ({ collectionType }) => {
     let fetchURL = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls`
 
     if (collectionType == "profile") {
-      fetchURL = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls`
+      if (!user || user.userId == null) return;
+      fetchURL = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls/user/${user.userId}`
     } else if (collectionType === "saved") {
       if (!user || user.userId == null) return;
       fetchURL = `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls/unvoted/${user.userId}`;

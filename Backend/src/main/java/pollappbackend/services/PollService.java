@@ -209,4 +209,37 @@ public class PollService {
         return polls;
     } // getUnvotedPollsForUser
 
+    public List<Poll> getPollsByCreator(int creatorId) {
+        String sql = "SELECT p.* FROM Poll p WHERE p.creator_id = ? ORDER BY p.created_at DESC";
+
+        List<Poll> polls = new ArrayList<>();
+
+        try (Connection conn = dataSource.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, creatorId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Poll p = new Poll();
+                    p.setPollId(rs.getInt("poll_id"));
+                    p.setTitle(rs.getString("title"));
+                    p.setCreatedAt(rs.getTimestamp("created_at"));
+                    p.setUpdatedAt(rs.getTimestamp("updated_at"));
+                    p.setCreatorId(rs.getInt("creator_id"));
+
+                    String imageId = rs.getString("image_id"); // can be null
+                    p.setImageId(imageId);
+
+                    polls.add(p);
+                } // while
+            } // try
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } // try catch
+
+        return polls;
+    } // getPollsByCreator
+
 } // PollService
