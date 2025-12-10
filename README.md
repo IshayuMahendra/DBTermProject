@@ -12,6 +12,15 @@ cd Backend
 mvn clean install
 mvn clean compile exec:java -Dexec.mainClass="pollappbackend.tools.DataPopulation"
 
+To Run Backend:
+cd Backend
+mvn clean install
+mvn spring-boot:run
+
+To Run Frontend (it is run from root):
+npm install
+npm run dev
+
 databasename: db_term_project
 username: root
 password: mysqlpass
