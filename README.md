@@ -8,6 +8,7 @@ Khan - Backend assistance and many of the PDFs required for the project
 Technologies: React, TypeScript, SpringBoot, Java, SQL
 
 To Run Data Population Tool:
+cd Backend
 mvn clean compile
 mvn exec:java -Dexec.mainClass="pollappbackend.tools.DataPopulation"
 
