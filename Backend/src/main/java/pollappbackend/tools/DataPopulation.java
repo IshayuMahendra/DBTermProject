@@ -22,7 +22,6 @@ public class DataPopulation {
             insertUser(conn, "kayla", hashedPass, "Kayla");
             insertUser(conn, "carnagist", hashedPass, "Carnagist");
 
-            // Meaningful polls (creator_id = 1 for testuser)
             int poll1 = insertPoll(conn, "Favorite CS Professor?", 1);
             insertOption(conn, poll1, "Hollingsworth");
             insertOption(conn, poll1, "Lamarca");
