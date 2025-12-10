@@ -32,16 +32,12 @@ interface PollDetailResponse {
   hasVoted?: boolean; //
 }
 
-interface PollCardProps {
-  poll: Poll;
-  onDelete: () => void;
-  onUpdated: () => void;
-}
+
 
 
 
 const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCardProps) => {
-  const [isBeingEdited, setIsBeingEdited] = useState(false);
+
   const [alertMsg, setAlertMsg] = useState<undefined | string>(undefined);
   const { user, isLoggedIn } = useUser();
   const router = useRouter();
@@ -129,23 +125,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
 
 
  
-  const handleDeletePoll = () => {
-  setAlertMsg(undefined);
-  fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls/${poll.pollId}`, {
-    method: "DELETE",
-  })
-    .then(async (res: Response) => {
-      if (res.ok) {
-        onDelete(); 
-      } else {
-        const text = await res.text();
-        setAlertMsg(text);
-      }
-    })
-    .catch((error: Error) => {
-      setAlertMsg(error.message);
-    });
-};
+
 
   const submitVote = async (optionIndex: number) => {
 
@@ -190,30 +170,16 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
     setAlertMsg(err.message ?? "Failed to vote.");
   }
 };
-  const doRefresh = () => {
-    fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/polls/${poll.pollId}`, {
-      method: 'GET'
-    }).then(async (res: Response) => {
-      const jsonData = await res.json();
-      if (res.ok && jsonData.poll && jsonData.options) {
-        poll.title = jsonData.poll.title;
-        setOptions(jsonData.options); 
-        setHasVoted(false);           
-        onUpdated();
-      } else {
-        setAlertMsg(jsonData.message ?? "Failed to refresh poll.");
-      }
-    })
-      .catch((error: Error) => {
-        setAlertMsg(error.message);
-      })
-  }
+
 
   return (
-    <>
+  <>
       <div
         className="bg-[#ff0000] pb-4 rounded text-lg font-mono border-solid border-1 border-[#ffce00]"
       >
+          <div>
+            <span className="text-xl">{poll.title}</span>
+          </div>
           <div className="px-6">
           <div className="mb-4">
           {alertMsg && (
@@ -243,7 +209,6 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
               className=" mr-4 pol-iconbtn"
               onClick={() => {
                 setAlertMsg(undefined);
-                setIsBeingEdited(true);
               }}
             >
               <FontAwesomeIcon icon={faPencil}></FontAwesomeIcon>
@@ -251,20 +216,9 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
             }
 
  
-            <button
-              className="pol-iconbtn mr-4"
-              onClick={() => {
-                handleDeletePoll()
-              }}
-            >
+            
               <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
-            </button>
-            <button
-              className="mr-4 pol-iconbtn"
-              onClick={doRefresh}
-            >
-              <FontAwesomeIcon icon={faRefresh}></FontAwesomeIcon>
-            </button>
+        
           </div>
         )}
           </div>
@@ -272,26 +226,7 @@ const PollCard: React.FC<PollCardProps> = ({ poll, onDelete, onUpdated}: PollCar
       </div>
 
   
-      {isBeingEdited && (
-        <Modal
-          onDismiss={() => setIsBeingEdited(false)}
-          transitionSeconds={0.3}
-          bgColor="#ff0000"
-          fgColor="#ff9a00"
-        >
-          <div className="pol-modal-large">
-            <AddPollForm onCompletion={(editedPoll) => {
-              setIsBeingEdited(false);
-              poll.title = editedPoll.title;
-              poll.options = editedPoll.options;
-              if(editedPoll.results) {
-                poll.results = editedPoll.results;
-              }
-              onUpdated();
-            }} pollToEdit={poll} />
-          </div>
-        </Modal>
-      )}
+
     </>
   );
 };
