@@ -1,3 +1,7 @@
+DROP DATABASE IF EXISTS db_term_project;
+CREATE DATABASE db_term_project;
+USE db_term_project;
+
 DROP TABLE IF EXISTS Vote;
 DROP TABLE IF EXISTS PollOption;
 DROP TABLE IF EXISTS Poll;
