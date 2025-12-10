@@ -9,6 +9,7 @@ Technologies: React, TypeScript, SpringBoot, Java, SQL
 
 To Run Data Population Tool:
 cd Backend
+mvn clean install
 mvn clean compile
 mvn exec:java -Dexec.mainClass="pollappbackend.tools.DataPopulation"
 
