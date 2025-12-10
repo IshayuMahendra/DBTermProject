@@ -1,0 +1,35 @@
+Group member contributions:
+
+Ishayu - UI, Frontend, Readme, designed look of the website
+Samhit - Database and backend design
+Kayla - Controller set up and Springboot optimization
+Khan - Backend assistance and many of the PDFs required for the project
+
+Technologies: React, TypeScript, SpringBoot, Java, SQL
+
+Data.sql is merely for showing SQL insertion but to populate the actual data we'd like you to please use our Java Data Population Tool as instructed below due to issues with hashing passwords through SQL queries when using Bcrypt.
+
+To Run Data Population Tool:
+cd Backend
+mvn clean install
+mvn clean compile exec:java -Dexec.mainClass="pollappbackend.tools.DataPopulation"
+
+To Run Backend:
+cd Backend
+mvn clean install
+mvn spring-boot:run
+
+To Run Frontend (it is run from root or right click on SRC -> integrated terminal):
+npm install
+npm run dev
+
+databasename: db_term_project
+username: root
+password: mysqlpass
+
+3 username/password pairs
+(testuser, pass123)
+(kayla, pass123)
+(carnagist, pass123)
+
+The .txt and .sql delivrables are int the folder DBTermProject/Deliverables
