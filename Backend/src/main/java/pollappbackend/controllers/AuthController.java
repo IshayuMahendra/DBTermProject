@@ -1,9 +1,13 @@
 package pollappbackend.controllers;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import pollappbackend.services.UserService;
 
 @RestController
@@ -14,20 +18,17 @@ public class AuthController {
 
     public AuthController(UserService userService) {
         this.userService = userService;
-    } // AuthController
+    }
 
     // DTO for incoming JSON
     public static class RegisterRequest {
         public String username;
         public String password;
         public String displayName;
-
-        // getters/setters (optional for now since fields are public)
-    } // RegisterRequest
+    }
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest req) {
-
         if (req.username == null || req.username.isBlank()
                 || req.password == null || req.password.isBlank()
                 || req.displayName == null || req.displayName.isBlank()) {
@@ -42,17 +43,16 @@ public class AuthController {
                     .body("Username already exists.");
         }
 
-        // TODO: hash password before saving
         userService.createUser(req.username, req.password, req.displayName);
 
         return ResponseEntity.ok("User registered successfully.");
-    } // register
+    }
 
     // DTO for incoming JSON
     public static class LoginRequest {
         public String username;
         public String password;
-    } // LoginRequest
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest req) {
@@ -76,7 +76,7 @@ public class AuthController {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("User record not found after login.");
-        } // if
+        }
 
         LoginResponse resp = new LoginResponse();
         resp.userId = user.getUserId();
@@ -84,12 +84,36 @@ public class AuthController {
         resp.displayName = user.getDisplayName();
 
         return ResponseEntity.ok(resp);
-    } // login
+    }
 
     public static class LoginResponse {
         public Integer userId;
         public String username;
         public String displayName;
-    } // LoginResponse
-    
-} // AuthController
+    }
+
+    public static class ChangePasswordRequest {
+        public String username;
+        public String oldPassword;
+        public String newPassword;
+    }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest req) {
+        if (req.username == null || req.username.isBlank()
+                || req.oldPassword == null || req.oldPassword.isBlank()
+                || req.newPassword == null || req.newPassword.isBlank()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("Username, old password, and new password are required.");
+        }
+
+        if (userService.changePassword(req.username, req.oldPassword, req.newPassword)) {
+            return ResponseEntity.ok("Password changed successfully.");
+        } else {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid username or old password.");
+        }
+    }
+}
