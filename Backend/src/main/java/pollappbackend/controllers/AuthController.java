@@ -1,5 +1,8 @@
 package pollappbackend.controllers;
 
+
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -90,30 +93,41 @@ public class AuthController {
         public Integer userId;
         public String username;
         public String displayName;
-    }
-
-    public static class ChangePasswordRequest {
-        public String username;
+    } // LoginResponse
+    
+    public static class UpdatePasswordRequest {
+        public Integer userId;
         public String oldPassword;
         public String newPassword;
     }
 
-    @PutMapping("/change-password")
-    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest req) {
-        if (req.username == null || req.username.isBlank()
-                || req.oldPassword == null || req.oldPassword.isBlank()
-                || req.newPassword == null || req.newPassword.isBlank()) {
+    @PutMapping("/update-password")
+    public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordRequest req) {
+        if (req.userId == null ||
+            req.oldPassword == null || req.oldPassword.isBlank() ||
+            req.newPassword == null || req.newPassword.isBlank()) {
+
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("Username, old password, and new password are required.");
+                    .badRequest()
+                    .body(Map.of("message", "All fields are required."));
         }
 
-        if (userService.changePassword(req.username, req.oldPassword, req.newPassword)) {
-            return ResponseEntity.ok("Password changed successfully.");
-        } else {
+        boolean updated = userService.updatePassword(
+                req.userId,
+                req.oldPassword,
+                req.newPassword
+        );
+
+        if (!updated) {
             return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("Invalid username or old password.");
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("message", "Current password is incorrect or user not found."));
         }
+
+        return ResponseEntity.ok(
+                Map.of("message", "Password updated successfully.")
+        );
     }
-}
+
+
+} // AuthController
